@@ -39,7 +39,7 @@ namespace amax {
       //check account in amax.recover
 
       account_realme_t accountrealme(account);
-      CHECKC( !_dbc.get(accountrealme) , err::RECORD_EXISTING, "account info not exist. ");
+      CHECKC( !_dbc.get(accountrealme) , err::RECORD_EXISTING, "account info already exist.");
       accountrealme.realme_info  = info;
       accountrealme.created_at   = current_time_point();
       _dbc.set(accountrealme, _self);
@@ -49,7 +49,7 @@ namespace amax {
    }
 
    void amax_auth::updateinfo ( const name& auth, const name& account, const string& info) {
-      
+
       _check_action_auth(auth, ActionType::UPDATEINFO);
 
       CHECKC( info.size() <= MAX_TITLE_SIZE && info.size() > 0 , err::PARAM_ERROR, "title size must be > 0 and <= " + to_string(MAX_TITLE_SIZE) );
