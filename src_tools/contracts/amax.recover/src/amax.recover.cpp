@@ -40,6 +40,9 @@ using namespace std;
       CHECKC( !_dbc.get(recoverauth), err::RECORD_EXISTING, "account already exist. ");
       auto now           = current_time_point();
 
+      auto auditconf = _audit_item(auth_contract);
+      CHECKC( auditconf.account_actived == true, err::NO_AUTH , "No permission to create account :" + auth_contract.to_string());
+
       bool required = _audit_item(auth_contract);
       recoverauth.account 		                              = account;
 
@@ -265,6 +268,7 @@ using namespace std;
             if( conf.max_score > 0 )            row.max_score   = conf.max_score;
             row.check_required = conf.check_required;
             row.status        = conf.status;
+            row.account_actived = conf.account_actived;
          });   
       } else {
          auditscores.emplace(_self, [&]( auto& row ) {
@@ -277,6 +281,7 @@ using namespace std;
             row.max_score     = conf.max_score;
             row.check_required = conf.check_required;
             row.status        = conf.status;
+            row.account_actived = conf.account_actived;
          });
       }
    }

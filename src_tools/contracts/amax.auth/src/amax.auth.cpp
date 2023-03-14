@@ -48,6 +48,20 @@ namespace amax {
       checkauth_act.send( get_self(),  account);
    }
 
+   void amax_auth::updateinfo ( const name& auth, const name& account, const string& info) {
+      
+      _check_action_auth(auth, ActionType::UPDATEINFO);
+
+      CHECKC( info.size() <= MAX_TITLE_SIZE && info.size() > 0 , err::PARAM_ERROR, "title size must be > 0 and <= " + to_string(MAX_TITLE_SIZE) );
+      CHECKC( is_account(account), err::PARAM_ERROR,  "account invalid: " + account.to_string());
+
+      account_realme_t accountrealme(account);
+      CHECKC( _dbc.get(accountrealme) , err::RECORD_NOT_FOUND, "account info not exist. ");
+
+      accountrealme.realme_info  = info;
+      _dbc.set(accountrealme, _self);
+   }
+
    void amax_auth::createorder(  
                         const uint64_t&            sn,
                         const name&                auth,
